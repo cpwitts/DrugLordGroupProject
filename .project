@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/DB2014_CA_3.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Downloads/A00218003/DB2014_CA_3.java</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

@@ -21,7 +21,11 @@ public class DurgLordSimple
     
     public static void main(String[] args) 
     {       
-        Scanner in = new Scanner(System.in);
+    	DBInterface.init_db();
+    	DBInterface.generateRandom();
+    	DBInterface.cleanup_resources();
+    }
+        /*Scanner in = new Scanner(System.in);
         //Starts the player with one employee
         employeesArr.add(new Dealer());
         //Starts the player with one drug
@@ -122,7 +126,7 @@ public class DurgLordSimple
             }
             
         }
-    }
+    }*/
     
     /**
      * The function that handles buying drugs. The user is prompted to enter a price until
