@@ -92,4 +92,110 @@ public class DBInterface
 			System.out.println("Error: Failed to connect to database\n"+e.getMessage());
 		}
 	}
+	
+	/*
+	 * 
+	 * 
+	 * 
+	 * ------------------------------------ TO DO-----------------------------------------
+	 * 
+	 * Below are the method headers and javadoc comments for the methods that need implementing
+	 * 
+	 * -----------------------------------------------------------------------------------
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	
+	/**
+	 * Display a list of all drugs owned by the player
+	 */
+	public static void displayPlayerDrugs()
+	{
+		
+	}
+	
+	/**
+	 * Display all drugs that the player can choose to purchase
+	 */
+	public static void displayAvailableDrugs()
+	{
+		
+	}
+	
+	/**
+	 * Display all employees currently working for the player
+	 */
+	public static void displayEmployees()
+	{
+		
+	}
+	
+	/**
+	 * Displays the drug dealers that the player can hire
+	 */
+	public static void displayHireableDealers()
+	{
+		
+	}
+
+	/**
+	 * Remove a drug from the players owned drugs
+	 * 
+	 * @param drugName The name of the drug to be removed
+	 */
+	public static void removeDrug(String drugName)
+	{
+		
+	}
+	
+	/**
+	 * Remove a RANDOM drug from the players owned drugs
+	 * (This will be called when a deal turns bad, and the player gets robbed)
+	 */
+	public static void removeRandomDrug()
+	{
+	
+	}
+	
+	/**
+	 * Adds a drug to the players owned drugs
+	 * 
+	 * @param drugName The name of the drug to be added
+	 */
+	public static void addDrug(String drugName)
+	{
+	
+	}
+	
+	/**
+	 * Retrieves a random dealer from a given rival gang
+	 * 
+	 * @param gangName The gang from which to get the dealer
+	 */
+	public static void getRandomRival(String gangName)
+	{
+		
+	}
+	
+	/**
+	 * Add a dealer to the players employees
+	 * 
+	 * @param id The id of the dealer
+	 */
+	public static void hireEmployee(int id)
+	{
+		
+	}
+	
+	/**
+	 * Remove an employee from the players employees
+	 * 
+	 * @param id The id of the employee
+	 */
+	public static void fireEmployee(int id)
+	{
+		
+	}
 }
