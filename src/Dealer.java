@@ -7,17 +7,30 @@ public class Dealer
 	/**
 	 * The dealers intelligence. Used when determining whether or not they will accept a deal
 	 */
-    int intelligence = (int) (50 + Math.random() * 50);
+    int intelligence;
     /**
      * The dealers strength. Used when determining whether or not they will win a fight
      */
-	int strength = (int) (Math.random() * 100);
+	int strength;
 	/**
 	 * The dealers patience. The higher their patience, the longer they will haggle
 	 */
-	int patience = (int) (1 + Math.random() * 5);
+	int patience;
 	/**
-	 * The dealers wage. The amount of money the player must pay them at the end of each day.
+	 * The amount to pay the dealer
 	 */
-	int wage = (100 + strength * 2);
+	int wage;
+
+	public Dealer(int dealerPatience, int dealerStrength, int dealerIntelligence)
+	{
+		patience = dealerPatience;
+		strength = dealerStrength;
+		intelligence = dealerIntelligence;
+	}
+	
+	public Dealer (int dealerStrength)
+	{
+		strength = dealerStrength;
+		wage = strength * 2;
+	}
 }

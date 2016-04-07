@@ -9,27 +9,25 @@ public class DurgLordSimple
     /**Your available money*/
     static int money = 10000;
     /**Your available drugs*/
-    static int drugs = 1;
+    static int drugs = 0;
     /**Your available employees*/
-    static int employees = 1;
+    static int employees = 0;
     /**Your strength*/
     static int yourStrength = 75;
-    /**Your employeesArr*/
-    static ArrayList<Dealer> employeesArr = new ArrayList<Dealer>();
-    /**Your drugs*/
-    static ArrayList<Drug> drugsArr = new ArrayList<Drug>();
-    
+
     public static void main(String[] args) 
     {       
     	DBInterface.init_db();
-    	DBInterface.generateRandom();
-    	DBInterface.cleanup_resources();
-    }
-        /*Scanner in = new Scanner(System.in);
-        //Starts the player with one employee
-        employeesArr.add(new Dealer());
-        //Starts the player with one drug
-        drugsArr.add(new Drug());
+    	if(!DBInterface.checkTablesArePopulated())
+    	{
+    		for (int i = 0; i < 50; i++)
+        	{
+        		DBInterface.generateRandom();
+        	}
+    	}
+    	drugs = DBInterface.calculatePlayerDrugs();
+    	employees = DBInterface.countEmployees();
+    	Scanner in = new Scanner(System.in);
         //Making sure you're still in business
         boolean dealing = true;
         while(dealing)
@@ -44,9 +42,11 @@ public class DurgLordSimple
                     //Must have at least one employee to send out
                 	if(employees > 0)
                     {
-                        System.out.println("Who will you send out on the deal? (Enter the number of the employee ot send them, enter a negative number to go back): \n");
+                        System.out.println("Who will you send out on the deal? (Enter the number of the employee ot send them): \n");
                         Dealer sentDealer = selectDealer();
-                        buy(sentDealer);
+                         System.out.println("Which drug will you try to Buy? (Enter the number of the drug to sell it): \n");
+                        Drug boughtDrug = selectDrugToBuy();
+                        buy(boughtDrug, sentDealer);
                     }
                     else
                     {
@@ -61,11 +61,11 @@ public class DurgLordSimple
                         System.out.println("Who will you send out on the deal? (Enter the number of the employee ot send them, enter a negative number to go back): \n");
                         Dealer sentDealer = selectDealer();
                         System.out.println("Which drug will you try to sell? (Enter the number of the drug to sell it, enter a negative number to go back): \n");
-                        Drug soldDrug = selectDrug();
+                        Drug soldDrug = selectDrugToSell();
                         //If the drug was sold, remove it
                         if(sell(sentDealer, soldDrug))
                         {
-                        	drugsArr.remove(soldDrug);
+                        	DBInterface.removeDrug(soldDrug.name);
                         }
                     }
                     else
@@ -102,18 +102,7 @@ public class DurgLordSimple
                     dealing = false;
                     System.out.println("\nYou retired with " + money + ".\nThat's impressive!\n");
                     in.close();
-                }
-                
-                //Deducts employee wages from player's money
-                if(employeesArr.size() > 0 && dealing)
-                {
-                    int cost = 0;
-                    for ( Dealer employee : employeesArr )
-                    {
-                        cost += employee.wage;
-                    }
-                    System.out.println("You pay your employees " + cost + "\n");
-                    money -= cost;
+                    DBInterface.cleanup_resources();
                 }
             }
         	
@@ -123,10 +112,11 @@ public class DurgLordSimple
                 dealing = false;
                 System.out.println("You ran out of money and drugs... \nGame Over");
                 in.close();
+                DBInterface.cleanup_resources();
             }
             
         }
-    }*/
+    }
     
     /**
      * The function that handles buying drugs. The user is prompted to enter a price until
@@ -138,12 +128,11 @@ public class DurgLordSimple
      * 
      * 
      */
-    public static void buy(Dealer employee)
+    public static void buy(Drug drug1, Dealer employee)
     {
         Scanner in = new Scanner(System.in);
         Dealer employee1 = employee;
-        Dealer dealer1 = new Dealer(); //Instntiates a Dealer (randomized stats)
-        Drug drug1 = new Drug();//Instntiates a Dealer (randomized stats)
+        Dealer dealer1 = DBInterface.getRandomDealer(); //Instntiates a Dealer (randomized stats)
         String input; //Used to take in the users input
         boolean bought = false; //Used to keep the deal going
         int sale = 0; //Stores the player's offer
@@ -164,9 +153,10 @@ public class DurgLordSimple
                 {
                     money -= sale;
                     drugs++;
-                    drugsArr.add(drug1);
+                    DBInterface.addDrug(drug1.name);;
                     bought = true;
                     System.out.println("Good deal!");
+                    payWages(employee1);
                 }
                 else
                 {
@@ -202,8 +192,8 @@ public class DurgLordSimple
     {
         Scanner in = new Scanner(System.in);
         Dealer employee1 = employee;
-        Dealer dealer1 = new Dealer(); //Instntiates a Dealer (randomized stats)
-        Drug drug1 = drug;//Instntiates a Dealer (randomized stats)
+        Dealer dealer1 = DBInterface.getRandomDealer(); //Instntiates a Dealer (randomized stats)
+        Drug drug1 = drug;
         boolean sold = false; //Used to keep the deal going
         int sale; //Stores player's offer
         String input; //Used to take in input
@@ -228,6 +218,7 @@ public class DurgLordSimple
                     sold = true;
                     System.out.println("Good deal!");
                     success = true;
+                    payWages(employee);
                 }
                 else
                 {
@@ -262,31 +253,22 @@ public class DurgLordSimple
      */
     public static void hire()
     {
-        Scanner in = new Scanner(System.in);
-        boolean decided = false; //used to loop the function while the user inputs values
-        Dealer employee = new Dealer();//Instatieates a Dealer with randomized stats
-        int count = 0;//Used to limit number of employees available
-        
-        //Offers the player up to 5 different employees to hire
-        while(!decided && count < 5)
-        {
-            //Prints dealer stats
-            System.out.println("Stength = " + employee.strength + "\nWage = " + employee.wage + "\nWould you like to hire him? YES or NO: ");
-            String input = in.next();
-            //If player decides to hire, add the employee to the arrayList, increment employees
-            if(input.equals("YES"))
+    	Scanner in = new Scanner(System.in);
+        boolean decided = false;//Used to loop the function
+        while(!decided)
+        {       
+            DBInterface.displayHireableDealers();
+            int input;
+            input = in.nextInt();
+            if (input <= 0)
             {
-                employeesArr.add(employee);
+                return;
+            }
+            else if(input <= DBInterface.countHireableDealers())
+            {
+                DBInterface.hireEmployee(input);
                 employees++;
                 decided = true;
-                System.out.println("You hired him!");
-            }
-            
-            else if(input.equals("NO"))
-            {
-                System.out.println("You didn't hire him...");
-                count++;
-                employee = new Dealer();//Create a new dealer for consideration
             }
         }
     }
@@ -304,26 +286,22 @@ public class DurgLordSimple
      */
     public static void fire()
     {
-        Scanner in = new Scanner(System.in);
+    	Scanner in = new Scanner(System.in);
         boolean decided = false;//Used to loop the function
         while(!decided)
         {       
-            printemployeesArr(); //Displays all owned employees
-            System.out.println("Which would you like to fire (enter digit, enter negative number to go back)?");
+            DBInterface.displayEmployees();
             int input;
             input = in.nextInt();
-            //Cancel if the player enters a negative value
-            if (input < 0)
+            if (input <= 0)
             {
-                System.out.println("You decide to fire nobody!");
-                decided = true;
+                return;
             }
-            //If the value is valid, remove employee and decrement employees
-            else if(input <= employeesArr.size())
+            else if(input <= DBInterface.countEmployees())
             {
-                employeesArr.remove(input-1);
-                decided = true;
+                DBInterface.fireEmployee(input);
                 employees--;
+                decided = true;
             }
         }
     }
@@ -346,9 +324,11 @@ public class DurgLordSimple
             money+= (int)(1000 + Math.random() * 4001);
             for(int i = gainedDrugs; i > 0; i--)
             {
-                drugsArr.add(new Drug());
+                DBInterface.addRandomDrug();
                 drugs++;
+                
             }
+            payWages(employee1);
         }
         
         else
@@ -364,52 +344,14 @@ public class DurgLordSimple
             }
             for(int i = lostDrugs; i > 0; i--)
             {
-                drugsArr.remove(0);
+                DBInterface.removeRandomDrug();
                 drugs--;
             }
+            payWages(employee1);
         }
     }
     
-    /**
-     * A function that displays the information of all currently employed dealers.
-     * It displays their strength and wage.
-     * 
-     * 
-     * -------------------------------------TO DO--------------------------------------
-     * Get all of the players employees from the database
-     * 
-     * 
-     */
-    public static void printemployeesArr()
-    {
-        int count = 1;
-        System.out.println("\n");
-        for ( Dealer employee : employeesArr )
-        {
-            System.out.println("Employee " + count + ":\nStength = " + employee.strength + "\nWage = " + employee.wage + "\n");
-            count++;
-        }
-    }
-    
-    /**
-     * A function that displays the information of all currently owned drugs.
-     * It displays their value.
-     * 
-     * 
-     * -------------------------------------TO DO--------------------------------------
-     * Get all the player owned drugs from the database
-     * 
-     * 
-     */
-    public static void printDrugs()
-    {
-        int count = 1;
-        for ( Drug drug : drugsArr )
-        {
-            System.out.println("Drug " + count + ":\nValue = " + drug.price + "\n");
-            count++;
-        }
-    }
+
     
     /**
      * Displays all of the players employees, and asks them to select one
@@ -424,16 +366,20 @@ public class DurgLordSimple
         boolean decided = false;//Used to loop the function
         while(!decided)
         {       
-            printemployeesArr(); //Displays all owned employees
+            DBInterface.displayEmployees(); //Displays all owned employees
             int input;
             input = in.nextInt();
             if (input <= 0)
             {
-                return null;
+                ;
             }
-            else if(input <= employeesArr.size())
+            else if(input <= DBInterface.countEmployees())
             {
-                return employeesArr.get(input - 1);
+                return DBInterface.getEmployee(input);
+            }
+            else
+            {
+            	;
             }
         }
         return null;
@@ -446,24 +392,64 @@ public class DurgLordSimple
      * 
      * @return Drug the selected drug
      */
-    public static Drug selectDrug()
+    public static Drug selectDrugToSell()
     {
-        Scanner in = new Scanner(System.in);
+    	Scanner in = new Scanner(System.in);
         boolean decided = false;//Used to loop the function
         while(!decided)
         {       
-            printDrugs(); //Displays all owned employees
+            DBInterface.displayPlayerDrugs(); //Displays all owned drugs
             int input;
             input = in.nextInt();
             if (input <= 0)
             {
                 return null;
             }
-            else if(input <= drugsArr.size())
+            else if(input <= DBInterface.countPlayerDrugs())
             {
-                return drugsArr.get(input - 1);
+                return DBInterface.getPlayerDrug(input);
             }
         }
         return null;
+    }
+    
+    /**
+     * Displays all of the available drugs, and asks the player to select one
+     * 
+     * -------------MAY HAVE TO CHANGE BASED ON DATABASE IMPLEMENTATION--------------
+     * 
+     * @return Drug the selected drug
+     */
+    public static Drug selectDrugToBuy()
+    {
+    	Scanner in = new Scanner(System.in);
+        boolean decided = false;//Used to loop the function
+        while(!decided)
+        {       
+            DBInterface.displayAvailableDrugs(); //Displays all owned drugs
+            int input;
+            input = in.nextInt();
+            if (input <= 0)
+            {
+                ;
+            }
+            else if(input <= DBInterface.countDrugs())
+            {
+                return DBInterface.getDrug(input);
+            }
+            else
+            {
+            	;
+            }
+        }
+        return null;
+    }
+
+    public static void payWages(Dealer employee)
+    {       
+         int cost = employee.wage;
+
+         System.out.println("You pay your employee " + cost + "\n");
+         money -= cost;
     }
 }

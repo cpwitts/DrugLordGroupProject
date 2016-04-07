@@ -77,6 +77,15 @@ INSERT INTO Random VALUES
     'ISIS'
 );
 
+INSERT INTO Random VALUES
+(
+	null,
+    'Jill', 
+    'MacCarthy',
+    'AIT',
+    'NONE'
+);
+
 DROP TABLE IF EXISTS Gang;
 
 CREATE TABLE Gang
@@ -88,6 +97,70 @@ CREATE TABLE Gang
     PRIMARY KEY (GangName)
 );
 
+INSERT INTO Gang VALUES
+(
+	'Ravagers',
+    'Amsterdam',
+    7,
+    60
+);
+
+INSERT INTO Gang VALUES
+(
+    'Skinheads',
+    'London',
+    6,
+    60
+);
+
+INSERT INTO Gang VALUES
+(
+    'Optomon',
+    'New York',
+    2,
+    95
+);
+
+INSERT INTO Gang VALUES
+(
+    'Guacamole',
+    'El Santero',
+    4,
+    75
+);
+
+INSERT INTO Gang VALUES
+(
+    'Pinstripes',
+    'Chigago',
+    5,
+    80
+);
+
+INSERT INTO Gang VALUES
+(
+    'THE RA',
+    'Dublin',
+    7,
+    50
+);
+
+INSERT INTO Gang VALUES
+(
+    'ISIS',
+    'Syria',
+    10,
+    50
+);
+
+INSERT INTO Gang VALUES
+(
+    'NONE',
+    'AIT',
+    10,
+    50
+);
+
 DROP TABLE IF EXISTS People;
 
 CREATE TABLE People
@@ -97,6 +170,7 @@ CREATE TABLE People
     LastName VARCHAR(20) NOT NULL,
     Loyalty INTEGER NOT NULL,
 	Location VARCHAR(20) NOT NULL,
+    Strength INT NOT NULL,
     Wage DOUBLE NOT NULL,
     GangName VARCHAR(20),
     PRIMARY KEY (ID),

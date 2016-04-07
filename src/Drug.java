@@ -3,8 +3,13 @@
  */
 public class Drug
 {
-    /**
-     * A randomly generated price
-     */
-	int price = (int) (2000 + (1000 - (Math.random() * 200)));
+
+	int price;
+	String name;
+	
+	public Drug(int drugPrice, String drugName)
+	{
+		price = drugPrice;
+		name = drugName;
+	}
 }
