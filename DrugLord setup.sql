@@ -183,7 +183,7 @@ CREATE TABLE Product
 (
 	Name VARCHAR(20) NOT NULL,
     Price DOUBLE NOT NULL,
-    Value DOUBLE NOT NULL,
+    Amount DOUBLE NOT NULL,
     PRIMARY KEY(Name)
 );
 
@@ -191,35 +191,35 @@ INSERT INTO Product values
 (
 	'PCP',
     50,
-    95
+    0
 );
 
 INSERT INTO Product values
 (
 	'Weed',
     5,
-	10
+	0
 );
 
 INSERT INTO Product values
 (
 	'Heroin',
     25,
-    35
+    0
 );
 
 INSERT INTO Product values
 (
 	'LSD',
     100,
-    120
+    0
 );
 
 INSERT INTO Product values
 (
 	'Eden',
     5000,
-    10000
+    0
 );
 
 DROP TABLE IF EXISTS Player;

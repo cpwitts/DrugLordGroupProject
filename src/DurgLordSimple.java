@@ -139,8 +139,6 @@ public class DurgLordSimple
      */
     public static void buy(Drug drug1, Dealer employee)
     {
-    	try
-    	{
 	        Scanner in = new Scanner(System.in);
 	        Dealer employee1 = employee;
 	        Dealer dealer1 = DBInterface.getRandomDealer(); //Instntiates a Dealer (randomized stats)
@@ -187,12 +185,6 @@ public class DurgLordSimple
 	                input = in.nextLine();
 	            }
 	        }
-	        in.close();
-    	}
-        finally
-        {
-        	DBInterface.cleanup_resources();
-        }
     }
     
     /**

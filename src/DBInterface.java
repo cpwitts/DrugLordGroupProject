@@ -30,10 +30,10 @@ public class DBInterface
 				String LastName = null;
 				String Location = null;
 				String GangName = null;
-				for(int i = 0; i < 3; i++)
+				for(int i = 0; i < 4; i++)
 				{
 					pstmt = con.prepareStatement("SELECT * FROM Random WHERE ID = ?");
-					int x = (int)(Math.random() * 7)+1;
+					int x = (int)(Math.random() * 8)+1;
 				    pstmt.setInt(1, x);
 				    rs = pstmt.executeQuery();
 				    rs.next();
@@ -53,26 +53,28 @@ public class DBInterface
 					    	break;
 				    }
 				}
-			    int Loyalty = (int)(Math.random()* 100)+ 1;
-			    double Wage = (Math.random()* 300)+ 1;
-			    pstmt = con.prepareStatement("INSERT INTO People VALUES (NULL,?,?,?,?,?,?)");
+			    double Strength = (Math.random()* 100)+ 1;
+			    pstmt = con.prepareStatement("INSERT INTO People VALUES (NULL,?,?,?,?,?,?,?)");
 			    pstmt.setString(1, FirstName);
 			    pstmt.setString(2, LastName);
-			    pstmt.setInt(3, Loyalty);
+			    pstmt.setInt(3, 0);
 			    pstmt.setString(4, Location);
-			    pstmt.setDouble(5, Wage);
-			    pstmt.setString(6, GangName);
-	            //System.out.printf("FirstName: %s\nLastName: %s\nLocation: %s\nGangName: %s\n",FirstName,LastName,Location,GangName);
+			    pstmt.setDouble(5, Strength);
+			    pstmt.setDouble(6, Strength * 2);
+			    pstmt.setString(7, GangName);
+			    pstmt.executeUpdate();
+	            System.out.printf("FirstName: %s\nLastName: %s\nLocation: %s\nGangName: %s\n\n",FirstName,LastName,Location,GangName);
 			}
 			catch (SQLException e) 
 			{
-				System.out.println("Error: Failed to randomise tables.");
+				System.out.println("Error: Failed to randomise People.");
 				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		
 	}
+	
 	/**
 	 * Gets data from the random table to insert into the gang table
 	 * @param amount
@@ -117,10 +119,53 @@ public class DBInterface
 	        }
 			catch (SQLException e) 
 			{
-				System.out.println("Error: Failed to randomise tables.");
+				System.out.println("Error: Failed to randomise Gangs.");
 				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
+		}
+		
+	}
+	
+	/**
+	 * Gets data from the random table to insert into the gang table
+	 */
+	public static void generateRandomGang()
+	{
+		try
+		{
+			String Location = null;
+			String GangName = null;
+			for(int i = 0; i < 1; i++)
+			{
+				pstmt = con.prepareStatement("SELECT * FROM Random WHERE ID = ?");
+				int x = (int)(Math.random() * 7)+1;
+				pstmt.setInt(1, x);
+				rs = pstmt.executeQuery();
+				rs.next();
+				switch (i)
+			    {
+				    case 0:
+				    	Location = rs.getString("Location");  
+				    	break;
+				    case 1:
+				    	GangName = rs.getString("GangName"); 
+				    	break;
+			    }
+			}
+		   int Agression = (int)(Math.random()* 100)+ 1;
+		   int Loyalty = (int)(Math.random()* 100)+ 1;
+		   pstmt = con.prepareStatement("INSERT INTO People VALUES (?,?,?,?)");
+		   pstmt.setString(1, GangName);
+		   pstmt.setString(2, Location);
+		   pstmt.setInt(3, Agression);
+		   pstmt.setInt(4, Loyalty);
+	    }
+		catch (SQLException e) 
+		{
+			System.out.println("Error: Failed to randomise Gangs.");
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}
