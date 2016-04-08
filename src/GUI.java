@@ -83,11 +83,4 @@ public class GUI extends JFrame {
 	}
 
 	
-
-	public static void main(String[] args) {
-		JFrame frame = new GUI();
-		frame.setTitle("Druglord");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-	}
 }

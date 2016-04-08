@@ -1,5 +1,7 @@
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+
 /**
  * A game where you live out your fantasies of being a drug lord
  */
@@ -18,102 +20,106 @@ public class DurgLordSimple
     {       
     	try
     	{
-    	DBInterface.init_db();
-    	if(!DBInterface.checkTablesArePopulated())
-    	{
-    		DBInterface.generateRandomPerson(50);
-    	}
-    	drugs = DBInterface.calculatePlayerDrugs();
-    	employees = DBInterface.countEmployees();
-    	Scanner in = new Scanner(System.in);
-        //Making sure you're still in business
-        boolean dealing = true;
-        while(dealing)
-        {
-            //If the player has money or drugs, display their options, and read their input. Calls appropriate functions
-        	if(money > 0 || drugs > 0)
-            {
-                System.out.println("\nYou have " + drugs + " drugs, " + employees + " employees, and " + money + " money\nBUY, SELL, HIRE, FIRE or RETIRE:\n");
-                String input = in.next();
-                if(input.equals("BUY"))
-                {
-                    //Must have at least one employee to send out
-                	if(employees > 0)
-                    {
-                        System.out.println("Who will you send out on the deal? (Enter the number of the employee ot send them): \n");
-                        Dealer sentDealer = selectDealer();
-                         System.out.println("Which drug will you try to Buy? (Enter the number of the drug to sell it): \n");
-                        Drug boughtDrug = selectDrugToBuy();
-                        buy(boughtDrug, sentDealer);
-                    }
-                    else
-                    {
-                         System.out.println("\nYou have no employees to send. You should try to HIRE some dealers!\n");
-                    }
-                }
-                else if(input.equals("SELL"))
-                {
-                    //Must have a drug and an employee to send out
-                	if(drugs > 0 && employees > 0)
-                    {
-                        System.out.println("Who will you send out on the deal? (Enter the number of the employee ot send them, enter a negative number to go back): \n");
-                        Dealer sentDealer = selectDealer();
-                        System.out.println("Which drug will you try to sell? (Enter the number of the drug to sell it, enter a negative number to go back): \n");
-                        Drug soldDrug = selectDrugToSell();
-                        //If the drug was sold, remove it
-                        if(sell(sentDealer, soldDrug))
-                        {
-                        	DBInterface.removeDrug(soldDrug.name);
-                        }
-                    }
-                    else
-                    {
-                        if (drugs <= 0)
-                        {
-                            System.out.println("\nYou have no drugs to sell. You should try to BUY some drugs!\n");
-                        }
-                        
-                        if (employees <= 0)
-                        {
-                            System.out.println("\nYou have no employees to send. You should try to HIRE some dealers!\n");
-                        }
-                    }
-                }
-                else if(input.equals("HIRE"))
-                {
-                    hire();
-                }
-                else if(input.equals("FIRE"))
-                {
-                    //Must have an employee to fire
-                	if (employees <= 0)
-                    {
-                        System.out.println("\nYou have no employees to fire\n");
-                    }
-                    else
-                    {
-                        fire();
-                    }
-                }
-                else if(input.equals("RETIRE"))
-                {
-                    dealing = false;
-                    System.out.println("\nYou retired with " + money + ".\nThat's impressive!\n");
-                    in.close();
-                    DBInterface.cleanup_resources();
-                }
-            }
-        	
-        	//If no drugs or money, game over
-            else
-            {
-                dealing = false;
-                System.out.println("You ran out of money and drugs... \nGame Over");
-                in.close();
-                DBInterface.cleanup_resources();
-            }
-            
-        }
+	    	JFrame frame = new GUI();
+	    	frame.setTitle("Druglord");
+	    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    	frame.setVisible(true);
+	    	DBInterface.init_db();
+	    	if(!DBInterface.checkTablesArePopulated())
+	    	{
+	    		DBInterface.generateRandomPerson(50);
+	    	}
+	    	drugs = DBInterface.calculatePlayerDrugs();
+	    	employees = DBInterface.countEmployees();
+	    	Scanner in = new Scanner(System.in);
+	        //Making sure you're still in business
+	        boolean dealing = true;
+	        while(dealing)
+	        {
+	            //If the player has money or drugs, display their options, and read their input. Calls appropriate functions
+	        	if(money > 0 || drugs > 0)
+	            {
+	                System.out.println("\nYou have " + drugs + " drugs, " + employees + " employees, and " + money + " money\nBUY, SELL, HIRE, FIRE or RETIRE:\n");
+	                String input = in.next();
+	                if(input.equals("BUY"))
+	                {
+	                    //Must have at least one employee to send out
+	                	if(employees > 0)
+	                    {
+	                        System.out.println("Who will you send out on the deal? (Enter the number of the employee ot send them): \n");
+	                        Dealer sentDealer = selectDealer();
+	                         System.out.println("Which drug will you try to Buy? (Enter the number of the drug to sell it): \n");
+	                        Drug boughtDrug = selectDrugToBuy();
+	                        buy(boughtDrug, sentDealer);
+	                    }
+	                    else
+	                    {
+	                         System.out.println("\nYou have no employees to send. You should try to HIRE some dealers!\n");
+	                    }
+	                }
+	                else if(input.equals("SELL"))
+	                {
+	                    //Must have a drug and an employee to send out
+	                	if(drugs > 0 && employees > 0)
+	                    {
+	                        System.out.println("Who will you send out on the deal? (Enter the number of the employee ot send them, enter a negative number to go back): \n");
+	                        Dealer sentDealer = selectDealer();
+	                        System.out.println("Which drug will you try to sell? (Enter the number of the drug to sell it, enter a negative number to go back): \n");
+	                        Drug soldDrug = selectDrugToSell();
+	                        //If the drug was sold, remove it
+	                        if(sell(sentDealer, soldDrug))
+	                        {
+	                        	DBInterface.removeDrug(soldDrug.name);
+	                        }
+	                    }
+	                    else
+	                    {
+	                        if (drugs <= 0)
+	                        {
+	                            System.out.println("\nYou have no drugs to sell. You should try to BUY some drugs!\n");
+	                        }
+	                        
+	                        if (employees <= 0)
+	                        {
+	                            System.out.println("\nYou have no employees to send. You should try to HIRE some dealers!\n");
+	                        }
+	                    }
+	                }
+	                else if(input.equals("HIRE"))
+	                {
+	                    hire();
+	                }
+	                else if(input.equals("FIRE"))
+	                {
+	                    //Must have an employee to fire
+	                	if (employees <= 0)
+	                    {
+	                        System.out.println("\nYou have no employees to fire\n");
+	                    }
+	                    else
+	                    {
+	                        fire();
+	                    }
+	                }
+	                else if(input.equals("RETIRE"))
+	                {
+	                    dealing = false;
+	                    System.out.println("\nYou retired with " + money + ".\nThat's impressive!\n");
+	                    in.close();
+	                    DBInterface.cleanup_resources();
+	                }
+	            }
+	        	
+	        	//If no drugs or money, game over
+	            else
+	            {
+	                dealing = false;
+	                System.out.println("You ran out of money and drugs... \nGame Over");
+	                in.close();
+	                DBInterface.cleanup_resources();
+	            }
+	            
+	        }
     	}
     	finally
     	{
