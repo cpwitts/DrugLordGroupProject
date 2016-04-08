@@ -11,6 +11,10 @@ import javax.swing.JTextField;
 
 public class GUI extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1121075646735683564L;
 	JTextField dField = new JTextField(8);
 	JTextField eField = new JTextField(8);
 	JTextField mField = new JTextField(8);

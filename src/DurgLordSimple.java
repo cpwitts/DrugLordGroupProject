@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -17,13 +16,12 @@ public class DurgLordSimple
 
     public static void main(String[] args) 
     {       
+    	try
+    	{
     	DBInterface.init_db();
     	if(!DBInterface.checkTablesArePopulated())
     	{
-    		for (int i = 0; i < 50; i++)
-        	{
-        		DBInterface.generateRandom();
-        	}
+    		DBInterface.generateRandomPerson(50);
     	}
     	drugs = DBInterface.calculatePlayerDrugs();
     	employees = DBInterface.countEmployees();
@@ -116,6 +114,11 @@ public class DurgLordSimple
             }
             
         }
+    	}
+    	finally
+    	{
+    		DBInterface.cleanup_resources();
+    	}
     }
     
     /**
@@ -130,51 +133,59 @@ public class DurgLordSimple
      */
     public static void buy(Drug drug1, Dealer employee)
     {
-        Scanner in = new Scanner(System.in);
-        Dealer employee1 = employee;
-        Dealer dealer1 = DBInterface.getRandomDealer(); //Instntiates a Dealer (randomized stats)
-        String input; //Used to take in the users input
-        boolean bought = false; //Used to keep the deal going
-        int sale = 0; //Stores the player's offer
-        while(!bought)
+    	try
+    	{
+	        Scanner in = new Scanner(System.in);
+	        Dealer employee1 = employee;
+	        Dealer dealer1 = DBInterface.getRandomDealer(); //Instntiates a Dealer (randomized stats)
+	        String input; //Used to take in the users input
+	        boolean bought = false; //Used to keep the deal going
+	        int sale = 0; //Stores the player's offer
+	        while(!bought)
+	        {
+	            //Warns the player of the deal going bad
+	            if(dealer1.patience == 1)
+	            {
+	                System.out.println("He's starting to lose his patience...");
+	            }
+	            
+	            System.out.println("The drug is worth " + drug1.price + ".\nHow much will you offer to buy it for: ");
+	            if(in.hasNextInt())
+	            {
+	                sale = in.nextInt();
+	                //If dealer accepts offer, deduct money, add the drug to the players drug array, increment the number of drugs
+	                if(sale > drug1.price * ((float)dealer1.intelligence/100))
+	                {
+	                    money -= sale;
+	                    drugs++;
+	                    DBInterface.addDrug(drug1.name);;
+	                    bought = true;
+	                    System.out.println("Good deal!");
+	                    payWages(employee1);
+	                }
+	                else
+	                {
+	                    System.out.println("No deal!");
+	                    dealer1.patience--; //Dealer loses patience if you offer him a bad deal
+	                }
+	                
+	                //Causes a fight when the Dealer loses patience
+	                if(dealer1.patience == 0)
+	                {
+	                    fight(dealer1, employee1);
+	                    bought = true;
+	                }
+	            }
+	            else
+	            {
+	                input = in.nextLine();
+	            }
+	        }
+	        in.close();
+    	}
+        finally
         {
-            //Warns the player of the deal going bad
-            if(dealer1.patience == 1)
-            {
-                System.out.println("He's starting to lose his patience...");
-            }
-            
-            System.out.println("The drug is worth " + drug1.price + ".\nHow much will you offer to buy it for: ");
-            if(in.hasNextInt())
-            {
-                sale = in.nextInt();
-                //If dealer accepts offer, deduct money, add the drug to the players drug array, increment the number of drugs
-                if(sale > drug1.price * ((float)dealer1.intelligence/100))
-                {
-                    money -= sale;
-                    drugs++;
-                    DBInterface.addDrug(drug1.name);;
-                    bought = true;
-                    System.out.println("Good deal!");
-                    payWages(employee1);
-                }
-                else
-                {
-                    System.out.println("No deal!");
-                    dealer1.patience--; //Dealer loses patience if you offer him a bad deal
-                }
-                
-                //Causes a fight when the Dealer loses patience
-                if(dealer1.patience == 0)
-                {
-                    fight(dealer1, employee1);
-                    bought = true;
-                }
-            }
-            else
-            {
-                input = in.nextLine();
-            }
+        	DBInterface.cleanup_resources();
         }
     }
     
