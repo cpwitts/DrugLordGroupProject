@@ -663,7 +663,7 @@ public class DBInterface
 			
 			//Generate a random number between 1 and the number of drug types.
 			//Add the corresponding drug.
-			int random = (int) (Math.random() * total) + 1;
+			int random = (int) (Math.random() * total) ;
 			pstmt = con.prepareStatement("SELECT Name FROM Product LIMIT ?, 1");
 			pstmt.setInt(1, random);
 			rs = pstmt.executeQuery();

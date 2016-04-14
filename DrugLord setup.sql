@@ -65,16 +65,16 @@ INSERT INTO Random VALUES
     'Larry', 
     'Wachowski',
     'Dublin',
-    'THE RA'
+    'The Leps'
 );
 
 INSERT INTO Random VALUES
 (
 	null,
-    'Allah', 
-    'Ackbar',
+    'Aizim', 
+    'Abdull',
     'Syria',
-    'ISIS'
+    'The Sands'
 );
 
 INSERT INTO Random VALUES
@@ -82,7 +82,7 @@ INSERT INTO Random VALUES
 	null,
     'Jill', 
     'MacCarthy',
-    'AIT',
+    'Nowhere',
     'NONE'
 );
 
@@ -139,7 +139,7 @@ INSERT INTO Gang VALUES
 
 INSERT INTO Gang VALUES
 (
-    'THE RA',
+    'The Leps',
     'Dublin',
     7,
     50
@@ -147,7 +147,7 @@ INSERT INTO Gang VALUES
 
 INSERT INTO Gang VALUES
 (
-    'ISIS',
+    'The Sands',
     'Syria',
     10,
     50
@@ -156,7 +156,7 @@ INSERT INTO Gang VALUES
 INSERT INTO Gang VALUES
 (
     'NONE',
-    'AIT',
+    'Nowhere',
     10,
     50
 );
@@ -171,7 +171,7 @@ CREATE TABLE People
     Loyalty INTEGER NOT NULL,
 	Location VARCHAR(20) NOT NULL,
     Strength INT NOT NULL,
-    Wage DOUBLE NOT NULL,
+    Wage INT NOT NULL,
     GangName VARCHAR(20),
     PRIMARY KEY (ID),
     FOREIGN KEY (GangName) REFERENCES Gang (GangName)
